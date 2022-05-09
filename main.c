@@ -4,6 +4,9 @@
 // deck size = 50x160
 
 #define ACCEPT "ACCEPT"
+#define ACCEPT_COLOR COLOR_BLUE
+#define LETTERS "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+#define LETTER_COLOR COLOR_CYAN
 
 void draw_accept(int y, int col){
 
@@ -11,7 +14,7 @@ void draw_accept(int y, int col){
   int pos_x, pos_y;
   
   start_color();
-  init_pair(1, COLOR_BLACK, COLOR_BLUE);
+  init_pair(1, COLOR_BLACK, ACCEPT_COLOR);
   attron(COLOR_PAIR(1));
   button_size = strlen(ACCEPT) ;
 
@@ -40,10 +43,18 @@ void draw_accept(int y, int col){
   refresh();
 }
 
+// Paint the letter in the matrix
+void toggle(int x, int y, int letter_offset){
+  init_pair(2, COLOR_BLACK, LETTER_COLOR);
+  attron(COLOR_PAIR(2));
+  mvprintw(y,x," %c ", LETTERS[letter_offset]);
+  attroff(COLOR_PAIR(2));
+
+}
+
 int main(){
 
-  char letters[36] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-  int out[36];
+  int out[36] = {0};
 
   int ch;
   int row, col,
@@ -54,12 +65,8 @@ int main(){
   int cur_y;
   int cur_x;
 
-  bool take_input = TRUE;
-
   ch = 0;
   row = col = corner_x = corner_y = pos_x = pos_y = cur_x = cur_y = 0;
-
-  bzero(out,36);
 
   initscr();
   raw();
@@ -84,7 +91,7 @@ int main(){
       mvaddch(corner_y+1, corner_x + i*5, ACS_VLINE);
 
       // Draw each letter with the separator --> " X |"
-      mvprintw(corner_y+1, corner_x + i*5 + 1, " %c ",letters[j*6+i]);
+      mvprintw(corner_y+1, corner_x + i*5 + 1, " %c ",LETTERS[j*6+i]);
       mvaddch(corner_y+1, corner_x + i*5+4, ACS_VLINE);
 
       // Draw bottom of boxes
@@ -105,7 +112,7 @@ int main(){
   noecho();
 
   // Start taking input
-  while(take_input) {
+  while(1) {
     ch = getch();
     switch(ch){
       case KEY_UP:
@@ -118,6 +125,7 @@ int main(){
         if(cur_y < base_y+16){
           cur_y += 3;
           move(cur_y, cur_x);
+          break;
         }
         if(cur_y == base_y+16){
           cur_y += 3;
@@ -140,7 +148,21 @@ int main(){
         }
         break;
       case 10:
-        take_input = FALSE;
+        if(cur_y > base_y+16) {
+          endwin();
+          for(int i=0;i<36;i++){
+            printf("%d",out[i]);
+          }
+          printf("\n");
+          return 0;
+        }
+
+        int off_y = (cur_y +1 - base_y) / 3;
+        int off_x = (cur_x -1 - corner_x) / 5;
+        int letter_offset = off_y*6+off_x;
+        out[letter_offset] = 1;
+        //printf("cy=%d,y=%d cx=%d,x=%d\n", cur_y, off_y, cur_x,off_x);
+        toggle(cur_x-1,cur_y,letter_offset);
     }
     refresh();
   }
