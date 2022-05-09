@@ -68,7 +68,11 @@ int main(){
   ch = 0;
   row = col = corner_x = corner_y = pos_x = pos_y = cur_x = cur_y = 0;
 
-  initscr();
+  FILE *f = fopen("/dev/tty","r+");
+  SCREEN *screen = newterm(NULL, f, f);
+  set_term(screen);
+
+  //initscr();
   raw();
 
   getmaxyx(stdscr, row, col);
