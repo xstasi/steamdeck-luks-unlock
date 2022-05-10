@@ -1,0 +1,16 @@
+Source: steamdeck-luks-unlock
+Section: admin
+Priority: optional
+Maintainer: Alessandro Grassi <alessandro@aggro.it>
+Build-Depends: debhelper-compat (= 13), libncurses-dev, gcc
+Standards-Version: 4.6.0
+Homepage: https://github.com/xstasi/steamdeck-luks-unlock
+Rules-Requires-Root: no
+
+Package: steamdeck-luks-unlock
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: LUKS unlocker for Steam Deck
+ This package contains a LUKS unlocker helper created to be
+ used on the Steam Deck, as well as the Debian files to make
+ it work.

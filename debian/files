@@ -1,0 +1,3 @@
+steamdeck-luks-unlock-dbgsym_0.1_amd64.ddeb debug optional automatic=yes
+steamdeck-luks-unlock_0.1_amd64.buildinfo admin optional
+steamdeck-luks-unlock_0.1_amd64.deb admin optional
