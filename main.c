@@ -49,7 +49,7 @@ void toggle(int x, int y, int letter_offset){
   attron(COLOR_PAIR(2));
   mvprintw(y,x," %c ", LETTERS[letter_offset]);
   attroff(COLOR_PAIR(2));
-
+  refresh();
 }
 
 int main(){
@@ -68,7 +68,7 @@ int main(){
   ch = 0;
   row = col = corner_x = corner_y = pos_x = pos_y = cur_x = cur_y = 0;
 
-  FILE *f = fopen("/dev/tty","r+");
+  FILE *f = fopen("/dev/console","r+");
   SCREEN *screen = newterm(NULL, f, f);
   set_term(screen);
 
@@ -157,7 +157,6 @@ int main(){
           for(int i=0;i<36;i++){
             printf("%d",out[i]);
           }
-          printf("\n");
           return 0;
         }
 
@@ -167,6 +166,7 @@ int main(){
         out[letter_offset] = 1;
         //printf("cy=%d,y=%d cx=%d,x=%d\n", cur_y, off_y, cur_x,off_x);
         toggle(cur_x-1,cur_y,letter_offset);
+        move(cur_y, cur_x );
     }
     refresh();
   }
